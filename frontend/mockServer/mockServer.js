@@ -2,8 +2,10 @@
 const express = require('express')
 const cors = require('cors')
 const router = require('./utils/authRouter')
-const { findUserByEmail, findUserByUsername } = require('./utils/userService')
-const {usersData,postsData,dummyPrompts} = require('./utils/mockData') 
+const fs = require('fs')
+const path = require('path')
+const users = require('./utils/users.json')
+const posts = require('./utils/posts.json')
 
 
 //* APP config
@@ -19,13 +21,18 @@ const port = 4000
 
 app.use('/auth',router)
 
-//? PostController
+
+
+//? postsController
+
+
+app.get('/posts',(req,res)=>{
+  res.status(200).json(posts)
+})
 
 app.get('/posts/:id',(req,res)=>{
   const id = req.params.id
-  console.log(id)
-  const posts = postsData.find(post=>post.userId==id) 
-  res.json(posts)
+  return res.status(200).json(posts.find(post=>post.id == id))
 })
 
 
@@ -57,20 +64,6 @@ app.post('/posts/:id',(req,res)=>{
 
 
 //? UserController
-//* User schema
-/*
- {
-      id: string
-      name: string
-      username: string
-      avatar: string
-      bio: string
-      following: number,
-      followers: number
-  }
-*/
-
-
 
 app.get('/users/me',(req,res)=>{
   const user = usersData[0]
@@ -86,25 +79,27 @@ app.get('/users/:username',(req,res)=>{
 })
 
 
-
-app.post('/users/:username',(req,res)=>{
-  const username_ = req.params.username
-  const user = findUserByUsername(username_)
+app.put('/users/:username',(req,res)=>{
+  const user = users.find(user=>user.username == req.params.username)
   if(user){
-    const {name,bio,username2} = req.body
-    if(name) user.name = name
-    if(bio) user.bio = bio
-    if(username2) user.username=username2
-    const response = updateUser(user)
-    if (response==='success') return res.status(204).json({flag:'success',message:'Ressource updated successfully'})
-    else return res.status(500).json({flag:'error',message:'error updating user data'})
+    try {
+      const {name,bio,username} = req.body
+      if(name) user.name = name
+      if(bio) user.bio = bio
+      if(username) user.username=username
+      users.push(user)
+      fs.writeFileSync(path.join(__dirname,'utils','users.json'),JSON.stringify(users,null,2))
+      return res.status(200).json({flag:'success',message:'Ressource updated successfully'})
+    } catch (error) {
+      return res.status(500).json({flag:'error',message:'error updating user data'})
+    }
   }
   else res.status(500).json({message:'invalid username'})
 
 })
 
 app.get('/users',(req,res)=>{
-  res.json(usersData)
+  res.status(200).json(users)
 })
 
 

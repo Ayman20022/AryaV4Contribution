@@ -11,7 +11,7 @@ const Index = () => {
   const [feedType, setFeedType] = useState<'all' | 'posts' | 'projects' | 'aggregators'>('all');
   const [displayCount, setDisplayCount] = useState(5);
   
-
+  
 
   const handleFeedTypeChange = (type: 'all' | 'posts' | 'projects' | 'aggregators') => {
     setFeedType(type);

@@ -480,4 +480,4 @@ const dummyPrompts = [
     }
   ];
 
-module.exports = {usersData,postsData,dummyPrompts}
+module.exports = {usersData,postsData,dummyPrompts,findUserById}
