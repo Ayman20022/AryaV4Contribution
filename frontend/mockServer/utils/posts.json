@@ -1,245 +1,245 @@
 [
-    {
-      "id": "p1",
-      "userId": "2",
-      "text": "Just launched a new design system for our app. Check it out and let me know what you think!",
-      "images": [
-        "https://picsum.photos/seed/design1/600/400"
-      ],
-      "link": "https://designsystem.example.com",
-      "createdAt": "2025-04-21T10:06:00.000Z",
-      "agrees": 128,
-      "disagrees": 3,
-      "amplifiedBy": [
-        "3",
-        "5"
-      ],
-      "comments": [
-        {
-          "id": "c1",
-          "userId": "3",
-          "text": "Love the color palette you've chosen. Very accessible!",
-          "createdAt": "2025-04-21T10:36:00.000Z",
-          "agrees": 12
-        },
-        {
-          "id": "c2",
-          "userId": "5",
-          "text": "The typography is perfect. What font are you using?",
-          "createdAt": "2025-04-21T10:51:00.000Z",
-          "agrees": 8
-        }
-      ]
-    },
-    {
-      "id": "p2",
-      "userId": "3",
-      "text": "Working on a new algorithm to optimize image loading. Initial tests show 40% faster load times! 🚀",
-      "createdAt": "2025-04-21T09:06:00.000Z",
-      "agrees": 245,
-      "disagrees": 2,
-      "amplifiedBy": [
-        "2",
-        "4"
-      ],
-      "comments": [
-        {
-          "id": "c3",
-          "userId": "2",
-          "text": "This is going to be game-changing for our mobile users!",
-          "createdAt": "2025-04-21T09:36:00.000Z",
-          "agrees": 18
-        }
-      ],
-      "isProject": true,
-      "collaborators": [
-        "2",
-        "5"
-      ],
-      "contributions": [
-        {
-          "id": "con1",
-          "userId": "5",
-          "type": "code",
-          "content": "https://github.com/example/image-optimization",
-          "createdAt": "2025-04-21T10:06:00.000Z"
-        }
-      ]
-    },
-    {
-      "id": "p3",
-      "userId": "5",
-      "text": "User research revealed some interesting insights about our onboarding flow. Planning to implement changes next week.",
-      "createdAt": "2025-04-21T07:06:00.000Z",
-      "agrees": 67,
-      "disagrees": 5,
-      "amplifiedBy": [],
-      "comments": [
-        {
-          "id": "c4",
-          "userId": "1",
-          "text": "Would love to hear more about your findings! Any key pain points?",
-          "createdAt": "2025-04-21T08:36:00.000Z",
-          "agrees": 11
-        }
-      ]
-    },
-    {
-      "id": "p4",
-      "userId": "4",
-      "text": "Created a 3D visualization for sustainable architecture. Fully interactive and ready for VR exploration.",
-      "images": [
-        "https://picsum.photos/seed/arch1/600/400",
-        "https://picsum.photos/seed/arch2/600/400"
-      ],
-      "video": "https://example.com/video.mp4",
-      "createdAt": "2025-04-20T11:06:00.000Z",
-      "agrees": 532,
-      "disagrees": 7,
-      "amplifiedBy": [
-        "1",
-        "2",
-        "3",
-        "5"
-      ],
-      "comments": [
-        {
-          "id": "c5",
-          "userId": "1",
-          "text": "The attention to detail is incredible! Would love to try this in VR.",
-          "createdAt": "2025-04-20T12:06:00.000Z",
-          "agrees": 22
-        }
-      ],
-      "isProject": true,
-      "collaborators": [
-        "1",
-        "3"
-      ],
-      "contributions": [
-        {
-          "id": "con2",
-          "userId": "3",
-          "type": "text",
-          "content": "Added energy efficiency calculations for the north wing.",
-          "createdAt": "2025-04-20T23:06:00.000Z"
-        },
-        {
-          "id": "con3",
-          "userId": "1",
-          "type": "image",
-          "content": "https://picsum.photos/seed/arch3/600/400",
-          "createdAt": "2025-04-21T11:06:00.000Z"
-        }
-      ]
-    },
-    {
-      "id": "p5",
-      "userId": "1",
-      "text": "Just finished redesigning my portfolio. Aiming for simplicity and clarity. Feedback welcome!",
-      "images": [
-        "https://picsum.photos/seed/portfolio/600/400"
-      ],
-      "link": "https://portfolio.example.com",
-      "createdAt": "2025-04-21T09:06:00.000Z",
-      "agrees": 48,
-      "disagrees": 0,
-      "amplifiedBy": [
-        "2"
-      ],
-      "comments": [
-        {
-          "id": "c6",
-          "userId": "2",
-          "text": "Clean and elegant! Love the transitions between sections.",
-          "createdAt": "2025-04-21T09:36:00.000Z",
-          "agrees": 8
-        }
-      ]
-    },
-    {
-      "id": "agg1",
-      "userId": "newsAggregatorId",
-      "text": "🔥 BREAKING: A new web standard for browser APIs was announced today, promising to revolutionize how developers interact with hardware peripherals. The W3C's new proposal aims to simplify access to device features.",
-      "link": "https://example.com/web-standard-announcement",
-      "createdAt": "2025-04-21T10:31:00.000Z",
-      "agrees": 327,
-      "disagrees": 12,
-      "amplifiedBy": [
-        "2",
-        "3"
-      ],
-      "comments": [],
-      "isAggregator": true,
-      "aggregatorSource": "Web Standards Weekly"
-    },
-    {
-      "id": "agg2",
-      "userId": "newsAggregatorId",
-      "text": "📊 TREND ALERT: Zero-knowledge proofs are gaining traction in mainstream applications. Companies are increasingly adopting this cryptographic method to enhance privacy while maintaining data verification capabilities.",
-      "images": [
-        "https://picsum.photos/seed/zk-proofs/600/400"
-      ],
-      "createdAt": "2025-04-21T07:06:00.000Z",
-      "agrees": 476,
-      "disagrees": 8,
-      "amplifiedBy": [
-        "3",
-        "4",
-        "5"
-      ],
-      "comments": [],
-      "isAggregator": true,
-      "aggregatorSource": "Crypto Insider"
-    },
-    {
-      "id": "agg3",
-      "userId": "newsAggregatorId",
-      "text": "💡 NEW RESEARCH: MIT researchers have developed a neural network architecture that reduces training time by 60% while maintaining accuracy parity with conventional models. The technique uses sparse matrix operations to optimize computations.",
-      "link": "https://example.com/mit-neural-network-breakthrough",
-      "createdAt": "2025-04-20T11:06:00.000Z",
-      "agrees": 892,
-      "disagrees": 14,
-      "amplifiedBy": [
-        "2",
-        "4"
-      ],
-      "comments": [],
-      "isAggregator": true,
-      "aggregatorSource": "AI Research Today"
-    },
-    {
-      "id": "agg4",
-      "userId": "newsAggregatorId",
-      "text": "🚀 PRODUCT LAUNCH: GraphQL Galaxy, a new developer platform, has launched with features specifically tailored for complex data fetching scenarios. The platform includes visual query building and automated documentation.",
-      "images": [
-        "https://picsum.photos/seed/graphql-galaxy/600/400"
-      ],
-      "createdAt": "2025-04-19T11:06:00.000Z",
-      "agrees": 543,
-      "disagrees": 27,
-      "amplifiedBy": [
-        "2",
-        "3",
-        "5"
-      ],
-      "comments": [],
-      "isAggregator": true,
-      "aggregatorSource": "DevTools Digest"
-    },
-    {
-      "id": "agg5",
-      "userId": "newsAggregatorId",
-      "text": "📱 INDUSTRY SHIFT: Progressive Web Apps (PWAs) are seeing wider adoption among enterprise customers, with a 47% increase in deployment over the last quarter. Performance metrics show 3x improvement in load times compared to traditional web apps.",
-      "link": "https://example.com/pwa-enterprise-adoption",
-      "createdAt": "2025-04-18T11:06:00.000Z",
-      "agrees": 631,
-      "disagrees": 42,
-      "amplifiedBy": [
-        "3"
-      ],
-      "comments": [],
-      "isAggregator": true,
-      "aggregatorSource": "Enterprise Tech Weekly"
-    }
-  ]
+  {
+    "id": "p1",
+    "userId": "u2",
+    "text": "Just launched a new design system for our app. Check it out and let me know what you think!",
+    "images": [
+      "https://picsum.photos/seed/design1/600/400"
+    ],
+    "link": "https://designsystem.example.com",
+    "createdAt": "2025-04-21T11:19:00.000Z",
+    "agrees": 128,
+    "disagrees": 3,
+    "amplifiedBy": [
+      "u3",
+      "u5"
+    ],
+    "comments": [
+      {
+        "id": "c1",
+        "userId": "u3",
+        "text": "Love the color palette you've chosen. Very accessible!",
+        "createdAt": "2025-04-21T11:49:00.000Z",
+        "agrees": 12
+      },
+      {
+        "id": "c2",
+        "userId": "u5",
+        "text": "The typography is perfect. What font are you using?",
+        "createdAt": "2025-04-21T12:04:00.000Z",
+        "agrees": 8
+      }
+    ]
+  },
+  {
+    "id": "p2",
+    "userId": "u3",
+    "text": "Working on a new algorithm to optimize image loading. Initial tests show 40% faster load times! 🚀",
+    "createdAt": "2025-04-21T09:19:00.000Z",
+    "agrees": 245,
+    "disagrees": 2,
+    "amplifiedBy": [
+      "u2",
+      "u4"
+    ],
+    "comments": [
+      {
+        "id": "c3",
+        "userId": "u2",
+        "text": "This is going to be game-changing for our mobile users!",
+        "createdAt": "2025-04-21T09:49:00.000Z",
+        "agrees": 18
+      }
+    ],
+    "isProject": true,
+    "collaborators": [
+      "u2",
+      "u5"
+    ],
+    "contributions": [
+      {
+        "id": "con1",
+        "userId": "u5",
+        "type": "code",
+        "content": "https://github.com/example/image-optimization",
+        "createdAt": "2025-04-21T11:19:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "p3",
+    "userId": "u5",
+    "text": "User research revealed some interesting insights about our onboarding flow. Planning to implement changes next week.",
+    "createdAt": "2025-04-21T05:19:00.000Z",
+    "agrees": 67,
+    "disagrees": 5,
+    "amplifiedBy": [],
+    "comments": [
+      {
+        "id": "c4",
+        "userId": "u1",
+        "text": "Would love to hear more about your findings! Any key pain points?",
+        "createdAt": "2025-04-21T07:49:00.000Z",
+        "agrees": 11
+      }
+    ]
+  },
+  {
+    "id": "p4",
+    "userId": "u4",
+    "text": "Created a 3D visualization for sustainable architecture. Fully interactive and ready for VR exploration.",
+    "images": [
+      "https://picsum.photos/seed/arch1/600/400",
+      "https://picsum.photos/seed/arch2/600/400"
+    ],
+    "video": "https://example.com/video.mp4",
+    "createdAt": "2025-04-20T13:19:00.000Z",
+    "agrees": 532,
+    "disagrees": 7,
+    "amplifiedBy": [
+      "u1",
+      "u2",
+      "u3",
+      "u5"
+    ],
+    "comments": [
+      {
+        "id": "c5",
+        "userId": "u1",
+        "text": "The attention to detail is incredible! Would love to try this in VR.",
+        "createdAt": "2025-04-20T14:19:00.000Z",
+        "agrees": 22
+      }
+    ],
+    "isProject": true,
+    "collaborators": [
+      "u1",
+      "u3"
+    ],
+    "contributions": [
+      {
+        "id": "con2",
+        "userId": "u3",
+        "type": "text",
+        "content": "Added energy efficiency calculations for the north wing.",
+        "createdAt": "2025-04-21T01:19:00.000Z"
+      },
+      {
+        "id": "con3",
+        "userId": "u1",
+        "type": "image",
+        "content": "https://picsum.photos/seed/arch3/600/400",
+        "createdAt": "2025-04-21T13:19:00.000Z"
+      }
+    ]
+  },
+  {
+    "id": "p5",
+    "userId": "u1",
+    "text": "Just finished redesigning my portfolio. Aiming for simplicity and clarity. Feedback welcome!",
+    "images": [
+      "https://picsum.photos/seed/portfolio/600/400"
+    ],
+    "link": "https://portfolio.example.com",
+    "createdAt": "2025-04-21T09:19:00.000Z",
+    "agrees": 48,
+    "disagrees": 0,
+    "amplifiedBy": [
+      "u2"
+    ],
+    "comments": [
+      {
+        "id": "c6",
+        "userId": "u2",
+        "text": "Clean and elegant! Love the transitions between sections.",
+        "createdAt": "2025-04-21T09:49:00.000Z",
+        "agrees": 8
+      }
+    ]
+  },
+  {
+    "id": "agg1",
+    "userId": "news-bot",
+    "text": "🔥 BREAKING: A new web standard for browser APIs was announced today, promising to revolutionize how developers interact with hardware peripherals. The W3C's new proposal aims to simplify access to device features.",
+    "link": "https://example.com/web-standard-announcement",
+    "createdAt": "2025-04-21T10:49:00.000Z",
+    "agrees": 327,
+    "disagrees": 12,
+    "amplifiedBy": [
+      "u2",
+      "u3"
+    ],
+    "comments": [],
+    "isAggregator": true,
+    "aggregatorSource": "Web Standards Weekly"
+  },
+  {
+    "id": "agg2",
+    "userId": "news-bot",
+    "text": "📊 TREND ALERT: Zero-knowledge proofs are gaining traction in mainstream applications. Companies are increasingly adopting this cryptographic method to enhance privacy while maintaining data verification capabilities.",
+    "images": [
+      "https://picsum.photos/seed/zk-proofs/600/400"
+    ],
+    "createdAt": "2025-04-21T05:19:00.000Z",
+    "agrees": 476,
+    "disagrees": 8,
+    "amplifiedBy": [
+      "u3",
+      "u4",
+      "u5"
+    ],
+    "comments": [],
+    "isAggregator": true,
+    "aggregatorSource": "Crypto Insider"
+  },
+  {
+    "id": "agg3",
+    "userId": "news-bot",
+    "text": "💡 NEW RESEARCH: MIT researchers have developed a neural network architecture that reduces training time by 60% while maintaining accuracy parity with conventional models. The technique uses sparse matrix operations to optimize computations.",
+    "link": "https://example.com/mit-neural-network-breakthrough",
+    "createdAt": "2025-04-20T13:19:00.000Z",
+    "agrees": 892,
+    "disagrees": 14,
+    "amplifiedBy": [
+      "u2",
+      "u4"
+    ],
+    "comments": [],
+    "isAggregator": true,
+    "aggregatorSource": "AI Research Today"
+  },
+  {
+    "id": "agg4",
+    "userId": "news-bot",
+    "text": "🚀 PRODUCT LAUNCH: GraphQL Galaxy, a new developer platform, has launched with features specifically tailored for complex data fetching scenarios. The platform includes visual query building and automated documentation.",
+    "images": [
+      "https://picsum.photos/seed/graphql-galaxy/600/400"
+    ],
+    "createdAt": "2025-04-19T13:19:00.000Z",
+    "agrees": 543,
+    "disagrees": 27,
+    "amplifiedBy": [
+      "u2",
+      "u3",
+      "u5"
+    ],
+    "comments": [],
+    "isAggregator": true,
+    "aggregatorSource": "DevTools Digest"
+  },
+  {
+    "id": "agg5",
+    "userId": "news-bot",
+    "text": "📱 INDUSTRY SHIFT: Progressive Web Apps (PWAs) are seeing wider adoption among enterprise customers, with a 47% increase in deployment over the last quarter. Performance metrics show 3x improvement in load times compared to traditional web apps.",
+    "link": "https://example.com/pwa-enterprise-adoption",
+    "createdAt": "2025-04-18T13:19:00.000Z",
+    "agrees": 631,
+    "disagrees": 42,
+    "amplifiedBy": [
+      "u3"
+    ],
+    "comments": [],
+    "isAggregator": true,
+    "aggregatorSource": "Enterprise Tech Weekly"
+  }
+]

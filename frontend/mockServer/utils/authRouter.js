@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const users = require('./users.json')
-
 const jwt = require('jsonwebtoken')
 const {jwt_secret} = require('../secret-key')
 const fs = require('fs')

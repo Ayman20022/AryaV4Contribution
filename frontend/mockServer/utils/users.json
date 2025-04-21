@@ -1,50 +1,44 @@
 [
   {
-    "id": "1",
+    "id": "u1",
     "name": "Jamie Smith",
     "username": "jamie_designs",
     "avatar": "https://i.pravatar.cc/150?img=12",
     "bio": "UI/UX Designer | Creating minimal interfaces that solve complex problems",
     "following": 245,
     "followers": 1289,
-    "email": "jamiesmith@gmail.com",
-    "password": "jamiesmith123"
+    "email":"ayman@gmail.com",
+    "password":"ayman123"
   },
   {
-    "id": "2",
+    "id": "u2",
     "name": "Alex Johnson",
     "username": "alex_tech",
     "avatar": "https://i.pravatar.cc/150?img=32",
     "bio": "Tech enthusiast & developer | Building the future",
     "following": 421,
     "followers": 5872,
-    "isFollowing": true,
-    "email": "alexjohnson@gmail.com",
-    "password": "alexjohnson123"
+    "isFollowing": true
   },
   {
-    "id": "3",
+    "id": "u3",
     "name": "Sophia Chen",
     "username": "sophia_codes",
     "avatar": "https://i.pravatar.cc/150?img=5",
     "bio": "Full-stack developer | Open source contributor",
     "following": 183,
     "followers": 4231,
-    "isFollowing": true,
-    "email": "sophiachen@gmail.com",
-    "password": "sophiachen123"
+    "isFollowing": true
   },
   {
-    "id": "4",
+    "id": "u4",
     "name": "Marcus Green",
     "username": "marcus_creates",
     "avatar": "https://i.pravatar.cc/150?img=53",
     "bio": "Visual designer & 3D artist",
     "following": 302,
     "followers": 8721,
-    "isFollowing": false,
-    "email": "marcusgreen@gmail.com",
-    "password": "marcusgreen123"
+    "isFollowing": false
   },
   {
     "id": "news-bot",
@@ -53,55 +47,16 @@
     "avatar": "https://i.pravatar.cc/150?img=11",
     "bio": "Your AI-powered industry news aggregator. Bringing you the latest in tech, design, and development.",
     "following": 0,
-    "followers": 14782,
-    "email": "spherenews@gmail.com",
-    "password": "spherenews123"
+    "followers": 14782
   },
   {
-    "id": "5",
-    "name": "Luna Park Junior",
-    "username": "luna_product_jr",
+    "id": "u5",
+    "name": "Luna Park",
+    "username": "luna_product",
     "avatar": "https://i.pravatar.cc/150?img=9",
-    "bio": "Data Scientist",
+    "bio": "Product Manager | Creating user-centric products",
     "following": 178,
     "followers": 2431,
-    "isFollowing": true,
-    "email": "lunapark@gmail.com",
-    "password": "lunapark123"
-  },
-  {
-    "id": "6",
-    "email": "emiya@gmail.com",
-    "username": "fate_zero_emiya",
-    "password": "emiya123",
-    "name": "Emiya kuritsugo",
-    "avatar": "https://i.pravatar.cc/150?img=32",
-    "bio": "killer",
-    "following": 0,
-    "followers": 0
-  },
-  {
-    "id": "5",
-    "name": "Luna Park Junior",
-    "username": "luna_product_jr",
-    "avatar": "https://i.pravatar.cc/150?img=9",
-    "bio": "Data Scientist",
-    "following": 178,
-    "followers": 2431,
-    "isFollowing": true,
-    "email": "lunapark@gmail.com",
-    "password": "lunapark123"
-  },
-  {
-    "id": "5",
-    "name": "Luna Park Junior",
-    "username": "luna_product_jr",
-    "avatar": "https://i.pravatar.cc/150?img=9",
-    "bio": "Data Scientist",
-    "following": 178,
-    "followers": 2431,
-    "isFollowing": true,
-    "email": "lunapark@gmail.com",
-    "password": "lunapark123"
+    "isFollowing": true
   }
 ]
