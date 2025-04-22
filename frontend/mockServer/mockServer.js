@@ -17,7 +17,6 @@ const port = 4000
 
 
 
-//? authController
 
 app.use('/auth',router)
 app.use('/users',userRouter)

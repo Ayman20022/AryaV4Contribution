@@ -8,6 +8,8 @@ const BASE_URL = baseUri()
 
 async function findUserById(userid) {
    const res = await fetch(BASE_URL+'users/'+userid)
+   const data = await res.json()
+   console.log('API -> /users/userid')
    return await res.json()
 
 }
