@@ -261,7 +261,7 @@ const Navbar = () => {
                   title={`${currentUser.firstName} ${currentUser.lastName} - View Profile`} // Title is correctly on the Link here
                 >
                   <img
-                    src={currentUser.avatar || `https://ui-avatars.com/api/?name=${currentUser.firstName}+${currentUser.lastName}&background=random`} 
+                    src={currentUser.avatarUrl || `https://ui-avatars.com/api/?name=${currentUser.firstName}+${currentUser.lastName}&background=random`} 
                     alt={`${currentUser.firstName}'s Avatar`}
                     className="avatar w-8 h-8 rounded-full object-cover hover:opacity-90 transition-opacity duration-200 ring-1 ring-offset-2 ring-offset-[#0a1225] ring-transparent hover:ring-primary" 
                   />

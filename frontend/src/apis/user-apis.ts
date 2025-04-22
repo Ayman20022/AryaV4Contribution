@@ -1,20 +1,80 @@
 import baseUri from "./api-uri"
-import axios from 'axios'
 
 
 const BASE_URL = baseUri()
 
-
-
-async function findUserById(userid) {
-   const res = await fetch(BASE_URL+'users/'+userid)
-   const data = await res.json()
-   console.log('API -> /users/userid')
-   return await res.json()
-
+interface ResponseWrapper<T>{
+   flag:boolean,
+   code:number,
+   message:string,
+   data:T
 }
 
-//! TEST THIS FUNCTION 
+interface ResponseWrapperList<T>{
+   flag:boolean,
+   code:number,
+   message:string,
+   data:{
+      content:T
+   }
+}
+
+
+interface CurrentUser{
+      id   : string,
+      firstName   : string,
+      //? to add it on the backend
+      name:string,
+      lastName   : string,
+      username   : string,
+      email   :string,
+      bio   : string,
+      avatarUrl   : string,
+      preferences   : string,
+      birthDate   : string,
+      balance   : number,
+      networking   : number,
+      networked   : number,
+      createdAt   : string,
+      updatedAt   : string
+}
+
+interface User{
+      id: string,
+      //? to add it on the backend
+      name:string,
+      firstName: string,
+      lastName: string,
+      username: string,
+      bio: string,
+      networking: number,
+      networked: number,
+      avatarUrl: string,
+      isFollowing:boolean
+}
+
+
+
+async function getCurrentUser():Promise<CurrentUser>{
+   const resHeader = await fetch(BASE_URL+'users/me')
+   const resBody:ResponseWrapper<CurrentUser> = await resHeader.json()
+   return resBody.data
+   
+   
+}
+
+async function getNetworkedUsers(userId): Promise<User[]> {
+   const resHeader = await fetch(BASE_URL+'users/'+userId+'/networked')
+   const resBody:ResponseWrapperList<User[]> = await resHeader.json()
+   return resBody.data.content
+ };
+
+ async function getNetworkingUsers(userId): Promise<User[]> {
+   const resHeader = await fetch(BASE_URL+'users/'+userId+'/networking')
+   const resBody:ResponseWrapperList<User[]> = await resHeader.json()
+   console.log('current users\n',resBody)
+   return resBody.data.content
+ };
 
 
 async function updateUser(username,userdata){
@@ -26,21 +86,21 @@ async function updateUser(username,userdata){
    return await res.json()
 }
 
+async function findUserByUsername(username):Promise<User> {
+   const resHeader = await fetch(BASE_URL+'users/'+'profile/'+username)
+   const resBody:ResponseWrapper<User> = await resHeader.json()
+   return resBody.data
+
+}
+
 async function getAllUsers(){
    const res = await fetch(BASE_URL+'users')
    return await res.json()
 }
 
-async function getCurrentUser() {
-   const res = await fetch(BASE_URL+'users/me')
-   if(res.ok){
-      return await res.json()
-   }
-   else console.log('error getting current user')
-   
-}
 
 
 
 
-export {findUserById,getCurrentUser,getAllUsers}
+export {findUserByUsername ,getCurrentUser,getAllUsers}
+export type {User}
