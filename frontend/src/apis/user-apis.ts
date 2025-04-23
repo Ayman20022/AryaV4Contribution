@@ -3,28 +3,52 @@ import baseUri from "./api-uri"
 
 const BASE_URL = baseUri()
 
-interface ResponseWrapper<T>{
+interface Wrapper1<T>{
    flag:boolean,
    code:number,
    message:string,
    data:T
 }
 
-interface ResponseWrapperList<T>{
-   flag:boolean,
-   code:number,
-   message:string,
-   data:{
-      content:T
+
+interface Wrapper2<T>{
+      content:T,
+      pagable:{
+         pageNumber:number,
+         pageSize:number,
+         sort:{
+            empty:boolean,
+            sorted:boolean,
+            unsorted:boolean
+         },
+         offset:number,
+         paged:boolean,
+         unpaged:boolean
+      },
+      totalpages:number,
+      totalElements:number,
+      last:boolean,
+      size:number,
+      number:number,
+      sort:{
+         "empty":false,
+         "sorted":boolean,
+         "unsorted":boolean
+      },
+      numberOfElements:number,
+      first:boolean,
+      empty:boolean
    }
-}
+
+
+   interface AvatarUrl{
+      avatarUrl: string
+   }
 
 
 interface CurrentUser{
       id   : string,
       firstName   : string,
-      //? to add it on the backend
-      name:string,
       lastName   : string,
       username   : string,
       email   :string,
@@ -41,8 +65,7 @@ interface CurrentUser{
 
 interface User{
       id: string,
-      //? to add it on the backend
-      name:string,
+
       firstName: string,
       lastName: string,
       username: string,
@@ -57,38 +80,58 @@ interface User{
 
 async function getCurrentUser():Promise<CurrentUser>{
    const resHeader = await fetch(BASE_URL+'users/me')
-   const resBody:ResponseWrapper<CurrentUser> = await resHeader.json()
+   const resBody:Wrapper1<CurrentUser> = await resHeader.json()
    return resBody.data
    
    
 }
 
-async function getNetworkedUsers(userId): Promise<User[]> {
+async function getNetworkedUsers(userId) {
    const resHeader = await fetch(BASE_URL+'users/'+userId+'/networked')
-   const resBody:ResponseWrapperList<User[]> = await resHeader.json()
-   return resBody.data.content
+   const resBody:Wrapper1<Wrapper2<User[]>> = await resHeader.json()
+   const data = resBody.data.content
+   console.log('recieved networked users',data)
+   return data
  };
 
- async function getNetworkingUsers(userId): Promise<User[]> {
+ async function getNetworkingUsers(userId) {
    const resHeader = await fetch(BASE_URL+'users/'+userId+'/networking')
-   const resBody:ResponseWrapperList<User[]> = await resHeader.json()
-   console.log('current users\n',resBody)
-   return resBody.data.content
+   const resBody:Wrapper1<Wrapper2<User[]>> = await resHeader.json()
+   const data = resBody.data.content
+   console.log('recieved networking users',data)
+   return data
  };
 
 
-async function updateUser(username,userdata){
-   const res = await fetch(BASE_URL+'users/'+username,{
+async function updateUser(userdata){
+   const resHeader = await fetch(BASE_URL+'users/update',{
       method:'POST',
       headers:{'Content-type':'application/json'},
-      body:userdata
+      body:JSON.stringify(userdata)
    })
-   return await res.json()
+
+   const resBody:Wrapper1<User> = await resHeader.json()
+   console.log('update response',resBody.data)
+   return resBody
 }
 
-async function findUserByUsername(username):Promise<User> {
-   const resHeader = await fetch(BASE_URL+'users/'+'profile/'+username)
-   const resBody:ResponseWrapper<User> = await resHeader.json()
+async function updateUserAvatar(imageString) {
+   const formData = new FormData();
+   formData.append('avatar', imageString); 
+ 
+   const resHeader = await fetch(BASE_URL + 'users/update/avatar', {
+     method: 'POST',
+     body: formData, 
+   });
+ 
+   const resBody:Wrapper1<AvatarUrl>  = await resHeader.json();
+   console.log('update response', resBody.data);
+   return resBody;
+ }
+
+async function findUser(userId):Promise<User> {
+   const resHeader = await fetch(BASE_URL+'users/profile/'+userId)
+   const resBody:Wrapper1<User> = await resHeader.json()
    return resBody.data
 
 }
@@ -102,5 +145,5 @@ async function getAllUsers(){
 
 
 
-export {findUserByUsername ,getCurrentUser,getAllUsers}
+export {findUser ,getCurrentUser,updateUserAvatar,getAllUsers,updateUser,getNetworkingUsers,getNetworkedUsers}
 export type {User}

@@ -20,7 +20,6 @@ userRouter.get('/me', (req, res) => {
       "id": "05c66d71-10a5-44ce-ba0f-8fd52b41a8c9",
       "firstName": "Saad",
       "lastName": "Aboulhoda",
-      "name":"alex",
       "username": "Aboulhoda42",
       "email": "saad@aboulhoda.me",
       "bio": "I love coding",
@@ -62,7 +61,6 @@ userRouter.get('/profile/:username', (req, res) => {
       "id": "cffab4dc-493c-48a5-b65f-5ce634b7281c",
       "firstName": "John",
       "lastName": "Wick",
-      "name":"alex",
       "username": "JohnWick",
       "bio": "John Wick",
       "networking": 60,
@@ -104,7 +102,6 @@ userRouter.get('/:userId/networking', (req, res) => {
           "id": "cffab4dc-493c-48a5-b65f-5ce634b7281c",
           "firstName": "Alice",
           "lastName": "Johnson",
-          "name":"alex",
           "username": "AliceJ",
           "bio": "Coffee enthusiast and coder.",
           "networking": 82,
@@ -115,7 +112,6 @@ userRouter.get('/:userId/networking', (req, res) => {
           "id": "6c5cc244-efba-4811-9fa2-2208a8e1e937",
           "firstName": "John",
           "lastName": "Wick",
-          "name":"alex",
           "username": "JohnWick",
           "bio": "John Wick",
           "networking": 60,
@@ -179,7 +175,6 @@ userRouter.get('/:userId/networked', (req, res) => {
           "id": "cffab4dc-493c-48a5-b65f-5ce634b7281c",
           "firstName": "Alice",
           "lastName": "Johnson",
-          "name":"alex",
           "username": "AliceJ",
           "bio": "Coffee enthusiast and coder.",
           "networking": 82,
@@ -190,7 +185,6 @@ userRouter.get('/:userId/networked', (req, res) => {
           "id": "6c5cc244-efba-4811-9fa2-2208a8e1e937",
           "firstName": "John",
           "lastName": "Wick",
-          "name":"alex",
           "username": "JohnWick",
           "bio": "John Wick",
           "networking": 60,
@@ -250,7 +244,6 @@ userRouter.post('/search', (req, res) => {
           "id": "cffab4dc-493c-48a5-b65f-5ce634b7281c",
           "firstName": "Alice",
           "lastName": "Johnson",
-          "name":"alex",
           "username": "AliceJ",
           "bio": "Coffee enthusiast and coder.",
           "networking": 82,
@@ -261,7 +254,6 @@ userRouter.post('/search', (req, res) => {
           "id": "6c5cc244-efba-4811-9fa2-2208a8e1e937",
           "firstName": "John",
           "lastName": "Wick",
-          "name":"alex",
           "username": "JohnWick",
           "bio": "John Wick",
           "networking": 60,
@@ -313,7 +305,6 @@ userRouter.post('/networks/:userId', (req, res) => {
       "id": "05c66d71-10a5-44ce-ba0f-8fd52b41a8c9",
       "firstName": "Saad",
       "lastName": "Aboulhoda",
-      "name":"alex",
       "username": "Aboulhoda42",
       "email": "saad@aboulhoda.me",
       "bio": "I love coding",
@@ -381,7 +372,7 @@ userRouter.delete('/networks/:userId', (req, res) => {
 
 })
 
-userRouter.put('/update', (req, res) => {
+userRouter.post('/update', (req, res) => {
   const cases = ['success', 'user_not_found']
   const flag = 'success'
 
@@ -391,12 +382,11 @@ userRouter.put('/update', (req, res) => {
     "message": "Success",
     "data": {
       "id": "05c66d71-10a5-44ce-ba0f-8fd52b41a8c9",
-      "firstName": "Saad",
+      "firstName": "updated Saad",
       "lastName": "Aboulhoda",
-      "name":"alex",
-      "username": "Aboulhoda42",
+      "username": "updated Aboulhoda42",
       "email": "saad@aboulhoda.me",
-      "bio": "I love coding",
+      "bio": "updated I love coding",
       "avatarUrl": "https://i.pravatar.cc/150?img=20",
       "preferences": "Software Development,Sport",
       "birthDate": "1970-01-01",
@@ -421,7 +411,7 @@ userRouter.put('/update', (req, res) => {
 
 })
 
-userRouter.put('/update/avatar', (req, res) => {
+userRouter.post('/update/avatar', (req, res) => {
   const cases = ['success', 'file_size_exceed', 'max_upload_exceed']
   const flag = 'success'
 
@@ -488,6 +478,11 @@ userRouter.put('/update/password', (req, res) => {
   if (flag == 'password_mismatch') return res.status(422).json(res_passwords_mismatch)
 
 
+  //? those are apis that doesn't exist on the backend
+
+  userRouter.get('/check/:username',(req,res)=>{
+
+  })
 })
 
 

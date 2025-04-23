@@ -1,11 +1,9 @@
-// src/pages/UserInterestsPage.tsx
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 
-// --- Dummy Data ---
 const ALL_INTERESTS = [
   "Web Development", "Mobile Development", "UI/UX Design", "Data Science",
   "Machine Learning", "AI Engineering", "Game Development", "Cybersecurity",
@@ -39,16 +37,12 @@ const UserInterestsPage: React.FC = () => {
     setIsLoading(true);
     console.log("Selected interests:", selectedInterests);
 
-    // --- Simulate saving interests (replace with API call later) ---
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // --- Mark interest selection as complete ---
     try {
-      // This is the flag to prevent showing this page again
       localStorage.setItem('userInterestsSelected', 'true');
       console.log('User interests selection marked as complete.');
 
-       // Trigger storage event manually for hooks that might listen
       window.dispatchEvent(new StorageEvent('storage', { key: 'userInterestsSelected', newValue: 'true' }));
 
 
@@ -57,8 +51,7 @@ const UserInterestsPage: React.FC = () => {
         description: "Your feed will now be personalized.",
       });
 
-      // Navigate to the main application page
-      navigate('/', { replace: true }); // Use replace to prevent going back
+      navigate('/', { replace: true }); 
 
     } catch (error) {
       console.error("Failed to save interest selection flag:", error);
@@ -69,7 +62,6 @@ const UserInterestsPage: React.FC = () => {
        })
        setIsLoading(false);
     }
-    // --- End Simulation ---
   };
 
   return (

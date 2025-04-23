@@ -15,7 +15,7 @@ const Index = () => {
 
   const handleFeedTypeChange = (type: 'all' | 'posts' | 'projects' | 'aggregators') => {
     setFeedType(type);
-    setDisplayCount(5); // Reset display count when changing feed type
+    setDisplayCount(5); 
   };
   
   const filteredFeed = feed.filter(post => {
@@ -37,13 +37,11 @@ const Index = () => {
     setDisplayCount(prev => prev + 5);
   };
 
-  // Show create form only for posts and projects, not for aggregators
   const showCreateForm = feedType === 'all' || feedType === 'posts' || feedType === 'projects';
 
   return (
     <div>
       <div className="feed-container">
-        {/* Feed type switcher */}
         <div className="flex justify-center mb-6">
           <div className="inline-flex rounded-lg border border-border bg-background/50 p-1">
             <button
@@ -89,7 +87,6 @@ const Index = () => {
           </div>
         </div>
         
-        {/* Create post form - only show for non-aggregator feeds */}
         {showCreateForm && (
           <CreatePostForm 
             isProject={feedType === 'projects'} 
@@ -97,7 +94,6 @@ const Index = () => {
           />
         )}
         
-        {/* Feed */}
         <div className="mt-6 space-y-4">
           {displayedFeed.map((post) => (
             post.isProject ? (

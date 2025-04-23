@@ -6,7 +6,14 @@ import FeedItem from '../components/feed/FeedItem';
 import ProjectItem from '../components/projects/ProjectItem'; 
 import PromptCard from '../components/marketplace/PromptCard'; 
 import { posts, users, Post } from '../data/dummyData';
-import {findUserByUsername, getCurrentUser,User} from '../apis/user-apis'
+import {findUser,
+  getCurrentUser,
+  User,
+  updateUser,
+  getNetworkedUsers,
+  getNetworkingUsers,
+  updateUserAvatar
+} from '../apis/user-apis'
 import { getPromptsByCreator, Prompt, dummyPrompts } from '../data/dummyPrompts';
 import { toast } from 'sonner';
 import { Button } from '../components/ui/button';       
@@ -42,20 +49,39 @@ const Profile = () => {
     queryFn: getCurrentUser,
   });
 
+
+
   const [user,setUser]=useState<User>(null)
+  const [networkedUsers,setNetworkedUsers]=useState([])
+  const [networkingUsers,setNetworkingUsers]=useState([])
   
-  const { username } = useParams(); 
+  const { userId } = useParams(); 
 
   //? UseEffect logic
   useEffect(()=>{
 
     const fetchData = async ()=>{
       try{
-        if(username){
+        if(userId){
           console.log('hello')
-          const userProfile = await findUserByUsername(username)
+          const userProfile = await findUser(userId)
           setUser(userProfile)
+
+          const networkedUsers_ = await getNetworkedUsers(userProfile.id)
+          setNetworkedUsers(networkedUsers_)
+
+          const networkingUsers_ = await getNetworkingUsers(userProfile.id)
+          setNetworkingUsers(networkingUsers_)
         }
+        else if (!isLoadingCurrentUser && currentUser) { // Check if not loading AND currentUser exists
+          // getting networked and networking users of the currentloggedin User
+          const networkedUsers_ = await getNetworkedUsers(currentUser.id);
+          setNetworkedUsers(networkedUsers_);
+  
+          const networkingUsers_ = await getNetworkingUsers(currentUser.id);
+          setNetworkingUsers(networkingUsers_);
+        }
+
       }
       catch(error){
         console.log('error fetching data for currently logged in user or fetching request user')
@@ -63,7 +89,7 @@ const Profile = () => {
     }
     fetchData()
     
-  },[username])
+  },[userId,isLoadingCurrentUser, currentUser])
 
   const [activeTab, setActiveTab] = useState<'posts' | 'projects' | 'marketplace'>('posts');
   const [displayCount, setDisplayCount] = useState(5);
@@ -72,20 +98,24 @@ const Profile = () => {
   const [promptToDelete, setPromptToDelete] = useState<Prompt | null>(null);
   const [promptToEdit, setPromptToEdit] = useState<Prompt | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [editedName, setEditedName] = useState('');
+  const [editedFirstName, setEditedFirstName] = useState('');
+  const [editedLastName, setEditedLastName] = useState('');
   const [editedUsername, setEditedUsername] = useState('');
   const [editedBio, setEditedBio] = useState('');
+
   const [showUsernameError, setShowUsernameError] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if(isLoadingCurrentUser) return <></>
   if(!currentUser) return <></>
-  if(!user && username) return <></>
+  if(!user && userId) return <></>
   
 
 
-  const profileUser = username?user:currentUser
+
+
+  const profileUser = userId?user:currentUser
   const isCurrentUser = profileUser.id === currentUser.id;
 
   const userPosts = posts.filter(post => post.userId === profileUser.id);
@@ -107,49 +137,42 @@ const Profile = () => {
 
   
   const handleNetworkToggle = () => {
-  
     if (profileUser) {
-
       toast.info(`Removed ${profileUser.username} from your network`);
       // TODO: Update the dummy data (e.g., profileUser.isFollowing = false; profileUser.followers--;). This needs care as it might not persist correctly without proper state management or re-fetching.
     } else {
      
       // TODO: Update dummy data (e.g., profileUser.isFollowing = true; profileUser.followers++;).
     }
-    
   };
 
  
   const handleTabChange = (tab: 'posts' | 'projects' | 'marketplace') => {
     setActiveTab(tab); 
     setDisplayCount(5); 
-   
   };
 
   
   const handleLoadMore = () => {
     setDisplayCount(prev => prev + 5); 
-   
   };
 
 
   const handlePostUpdated = () => {
-   
     setDisplayCount(displayCount);
-     
   };
 
   
-  const getNetworkedUsers = ()=> {
+  const getNetworkedUsers_ = ()=> {
     
-    return users.filter(user => user.isFollowing || true); 
+    return networkedUsers.slice(0,8)
    
   };
 
  
-  const getNetworkingUsers = ()=> {
+  const getNetworkingUsers_ = ()=> {
    
-    return users.slice(0, 8); 
+    return networkingUsers.slice(0,8)
   
   };
 
@@ -174,41 +197,53 @@ const Profile = () => {
       setIsEditing(false);
       setShowUsernameError(false); 
     } else {
-      setEditedName(profileUser.name);
+      setEditedFirstName(profileUser.firstName);
+      setEditedLastName(profileUser.lastName)
       setEditedUsername(profileUser.username);
       setEditedBio(profileUser.bio);
       setIsEditing(true); 
     }
   };
 
-  const checkUsername = (username: string) => {
-    if (username === profileUser.username) {
-      setShowUsernameError(false); 
-      return false; 
-    }
-
-    const isTaken = users.some(user =>
-      user.id !== profileUser.id && 
-      user.username.toLowerCase() === username.toLowerCase() 
-    );
-
-    setShowUsernameError(isTaken); 
-    return isTaken;
-  };
-
-  const saveProfileChanges = () => {
-    if (checkUsername(editedUsername)) {
-      return;
-    }
-    if (!editedName.trim()) { 
-      toast.error("Name cannot be empty"); 
+  
+  const saveProfileChanges = async () => {
+    
+    if (!editedFirstName.trim()) { 
+      toast.error("firstName cannot be empty"); 
       return; 
     }
-    profileUser.name = editedName;
-    profileUser.username = editedUsername;
-    profileUser.bio = editedBio;
-    setIsEditing(false);
-    toast.success("Profile updated successfully"); 
+    if (!editedLastName.trim()) { 
+      toast.error("lastName cannot be empty"); 
+      return; 
+    }
+
+    if(!editedUsername.trim()){
+      toast.error("Username cannot be empty")
+      return;
+    }
+
+    const update_data = {
+      firstName:editedFirstName,
+      lastName:editedLastName,
+      username:editedUsername,
+      bio:editedBio
+    }
+
+    try {
+      const updated_user_from_server = await updateUser(update_data);
+      if (updated_user_from_server.code==200) {
+        profileUser.firstName = updated_user_from_server.data.firstName, // Assuming the server returns the updated user
+        profileUser.lastName = updated_user_from_server.data.lastName,
+        profileUser.username = updated_user_from_server.data.username,
+        profileUser.bio = updated_user_from_server.data.bio,
+        setIsEditing(false);
+        toast.success("Profile updated successfully");
+      }
+      else throw new Error(updated_user_from_server.message)
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("Failed to update profile. Please try again.");
+    }
   };
 
   const triggerFileUpload = () => {
@@ -217,17 +252,26 @@ const Profile = () => {
     }
   };
 
-  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProfilePictureChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return; 
-
-   
     const reader = new FileReader(); 
-    reader.onload = () => {
+    reader.onload = async () => {
       if (typeof reader.result === 'string') {
-        profileUser.avatarUrl = reader.result; 
-        toast.success("Profile picture updated");
-        setDisplayCount(displayCount);
+        try{
+          const response = await updateUserAvatar(reader.result)
+          console.log('image change resp',response)
+          if(response.code == 200){
+            profileUser.avatarUrl = response.data.avatarUrl
+            toast.success("Profile picture updated");
+            setDisplayCount(displayCount);
+          }
+         else throw new Error(response.message)
+        }
+        catch(error)
+        {
+          toast.error(error)
+        }
       }
     };
     reader.readAsDataURL(file); 
@@ -305,7 +349,7 @@ const Profile = () => {
                 )}
                 <img
                   src={profileUser.avatarUrl}
-                  alt={profileUser.name} 
+                  alt={profileUser.username} 
                   className="avatar w-20 h-20" 
                 />
               </div>
@@ -315,8 +359,16 @@ const Profile = () => {
                   <div className="space-y-3"> 
                     <div>
                       <Input
-                        value={editedName} 
-                        onChange={(e) => setEditedName(e.target.value)} 
+                        value={editedFirstName} 
+                        onChange={(e) => setEditedFirstName(e.target.value)} 
+                        className="font-bold text-xl" 
+                        placeholder="Your name"
+                      />
+                    </div>
+                    <div>
+                      <Input
+                        value={editedLastName} 
+                        onChange={(e) => setEditedLastName(e.target.value)} 
                         className="font-bold text-xl" 
                         placeholder="Your name"
                       />
@@ -327,8 +379,7 @@ const Profile = () => {
                         <Input
                           value={editedUsername}
                           onChange={(e) => {
-                            setEditedUsername(e.target.value); 
-                            checkUsername(e.target.value);   
+                            setEditedUsername(e.target.value);   
                           }}
                           className=""
                           placeholder="username"
@@ -362,7 +413,7 @@ const Profile = () => {
                 ) : (
                   <> 
                     <div className="flex items-center space-x-2"> 
-                      <h1 className="text-2xl font-bold text-foreground">{profileUser.name}</h1>
+                      <h1 className="text-2xl font-bold text-foreground">{`${profileUser.firstName} ${profileUser.lastName}`}</h1>
                       {isCurrentUser && (
                         <Button
                           variant="ghost"
@@ -463,7 +514,7 @@ const Profile = () => {
               <p className="text-muted-foreground"> 
                 
                 {activeTab === 'marketplace'
-                  ? `${profileUser.name} hasn't created any prompts yet`
+                  ? `${profileUser.firstName} ${profileUser.lastName} hasn't created any prompts yet`
                   : `No ${activeTab} to display`}
               </p>
             </div>
@@ -493,7 +544,7 @@ const Profile = () => {
             <DialogTitle className="flex items-center gap-2">
               <Users className="h-5 w-5" /> 
               {showNetworkDialog === 'followers' ? 'Networked with ' : 'Networking with '}
-              {profileUser.name}
+              {profileUser.firstName + " " + profileUser.lastName}
             </DialogTitle>
           </DialogHeader>
           <div className="max-h-[60vh] overflow-y-auto"> 
@@ -506,13 +557,13 @@ const Profile = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {(showNetworkDialog === 'followers' ? getNetworkingUsers() : getNetworkedUsers())
+                {(showNetworkDialog === 'followers' ? getNetworkingUsers_() : getNetworkedUsers_())
                   .map((user) => (
                     <TableRow key={user.id}> 
                       <TableCell className="flex items-center space-x-3">
-                        <img src={user.avatar} alt="" className="w-8 h-8 rounded-full" />
+                        <img src={user.avatarUrl} alt="" className="w-8 h-8 rounded-full" />
                         <div>
-                          <p className="font-medium">{user.name}</p>
+                          <p className="font-medium">{user.firstName + " " + user.lastName}</p>
                           <p className="text-xs text-muted-foreground">@{user.username}</p>
                         </div>
                       </TableCell>
