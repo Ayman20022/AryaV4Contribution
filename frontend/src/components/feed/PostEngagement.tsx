@@ -1,11 +1,23 @@
-
-import React, { useState } from 'react';
-import { MessageSquare, ThumbsUp, ThumbsDown, Share2, Flag } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../ui/dialog';
-import { Button } from '../ui/button';
-import { Textarea } from '../ui/textarea';
-import { toast } from 'sonner';
-import { currentUser } from '../../data/dummyData';
+import React, { useState } from "react";
+import {
+  MessageSquare,
+  ThumbsUp,
+  ThumbsDown,
+  Share2,
+  Flag,
+} from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "../ui/dialog";
+import { Button } from "../ui/button";
+import { Textarea } from "../ui/textarea";
+import { toast } from "sonner";
+import { currentUser } from "../../data/dummyData";
+import { PostService } from "@/services/PostService";
 
 interface PostEngagementProps {
   postId?: string;
@@ -20,8 +32,6 @@ interface PostEngagementProps {
   hasAgreed?: boolean;
   hasDisagreed?: boolean;
   hasAmplified?: boolean;
-  onAgree?: () => void;
-  onDisagree?: () => void;
   onCommentClick?: () => void;
   onAmplify?: (text?: string) => void;
   onReport?: () => void;
@@ -30,6 +40,7 @@ interface PostEngagementProps {
 }
 
 const PostEngagement: React.FC<PostEngagementProps> = ({
+  postId,
   agrees = 0,
   disagrees = 0,
   comments = 0,
@@ -41,36 +52,38 @@ const PostEngagement: React.FC<PostEngagementProps> = ({
   hasAgreed = false,
   hasDisagreed = false,
   hasAmplified = false,
-  onAgree,
-  onDisagree,
   onCommentClick,
   onAmplify,
   onReport,
   collaborators = [], // Default empty array
-  onCollaborateToggle
+  onCollaborateToggle,
 }) => {
   const [isAmplifyDialogOpen, setIsAmplifyDialogOpen] = useState(false);
-  const [amplifyText, setAmplifyText] = useState('');
-  
+  const [amplifyText, setAmplifyText] = useState("");
+  const [agreeCount, setAgreeCount] = useState(agrees);
+  const [disAgreeCount, setDisAgreeCount] = useState(disagrees);
+  const [isAgreed, setIsAgreed] = useState(hasAgreed);
+  const [isDisagreed, setIsDisagreed] = useState(hasDisagreed);
+
   const handleAmplify = () => {
     if (onAmplify) {
       if (isAmplifyDialogOpen) {
         onAmplify(amplifyText);
-        setAmplifyText('');
+        setAmplifyText("");
         setIsAmplifyDialogOpen(false);
       } else {
         setIsAmplifyDialogOpen(true);
       }
     }
   };
-  
+
   const handleSimpleAmplify = () => {
     if (onAmplify) {
       onAmplify();
       setIsAmplifyDialogOpen(false);
     }
   };
-  
+
   const handleReport = () => {
     if (onReport) {
       onReport();
@@ -78,30 +91,72 @@ const PostEngagement: React.FC<PostEngagementProps> = ({
       toast.info("Content reported to moderators");
     }
   };
-  
+
   const handleCollaborate = () => {
     if (onCollaborateToggle) {
       // Safe check for collaborators array before using includes
-      const isCurrentlyCollaborating = Array.isArray(collaborators) && collaborators.includes(currentUser.id);
+      const isCurrentlyCollaborating =
+        Array.isArray(collaborators) && collaborators.includes(currentUser.id);
       onCollaborateToggle(!isCurrentlyCollaborating);
     }
   };
-  
+
   // Use the provided counts or fallback to the original values
   // Ensure we handle undefined values
-  const displayCommentCount = commentsCount !== undefined ? commentsCount : comments;
-  
+  const displayCommentCount =
+    commentsCount !== undefined ? commentsCount : comments;
+
   // Safely get the amplify count without relying on .length of potentially undefined values
-  const displayAmplifyCount = amplifiedCount !== undefined 
-    ? amplifiedCount 
-    : (Array.isArray(amplifiedBy) ? amplifiedBy.length : 0);
-  
+  const displayAmplifyCount =
+    amplifiedCount !== undefined
+      ? amplifiedCount
+      : Array.isArray(amplifiedBy)
+      ? amplifiedBy.length
+      : 0;
+
   // Safely check if current user has amplified the post
-  const userHasAmplified = hasAmplified || (Array.isArray(amplifiedBy) && amplifiedBy.includes(currentUser.id));
-  
+  const userHasAmplified =
+    hasAmplified ||
+    (Array.isArray(amplifiedBy) && amplifiedBy.includes(currentUser.id));
+
   // Safely check if current user is collaborating
-  const isCollaborating = Array.isArray(collaborators) && collaborators.includes(currentUser.id);
-  
+  const isCollaborating =
+    Array.isArray(collaborators) && collaborators.includes(currentUser.id);
+
+  const onAgree = async () => {
+    if (isDisagreed) {
+      await PostService.cancelDisagree(postId);
+      setIsDisagreed(false);
+      setDisAgreeCount(disAgreeCount - 1);
+    }
+    if (isAgreed) {
+      await PostService.cancelAgree(postId);
+      setIsAgreed(false);
+      setAgreeCount(agreeCount - 1);
+    } else {
+      PostService.agree(postId);
+      setIsAgreed(true);
+      setAgreeCount(agreeCount + 1);
+    }
+  };
+
+  const onDisagree = async () => {
+    if (isAgreed) {
+      await PostService.cancelAgree(postId);
+      setIsAgreed(false);
+      setAgreeCount(agreeCount - 1);
+    }
+    if (isDisagreed) {
+      await PostService.cancelDisagree(postId);
+      setIsDisagreed(false);
+      setDisAgreeCount(disAgreeCount - 1);
+    } else {
+      await PostService.disagree(postId);
+      setIsDisagreed(true);
+      setDisAgreeCount(disAgreeCount + 1);
+    }
+  };
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -109,61 +164,77 @@ const PostEngagement: React.FC<PostEngagementProps> = ({
           <button
             onClick={onCommentClick}
             className={`flex items-center text-sm space-x-1.5 ${
-              hasCommented ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+              hasCommented
+                ? "text-primary"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <MessageSquare className="w-[18px] h-[18px]" />
             <span>{displayCommentCount}</span>
           </button>
-          
+
           <div className="flex items-center space-x-2">
             <button
               onClick={onAgree}
               className={`flex items-center text-sm space-x-1.5 ${
-                hasAgreed ? 'text-green-500 fill-green-500' : 'text-muted-foreground hover:text-green-500'
+                isAgreed
+                  ? "text-green-500 fill-green-500"
+                  : "text-muted-foreground hover:text-green-500"
               }`}
             >
-              <ThumbsUp className={`w-[18px] h-[18px] ${hasAgreed ? 'fill-green-500' : ''}`} />
-              <span>{agrees}</span>
+              <ThumbsUp
+                className={`w-[18px] h-[18px] ${
+                  isAgreed ? "fill-green-500" : ""
+                }`}
+              />
+              <span>{agreeCount}</span>
             </button>
-            
+
             <button
               onClick={onDisagree}
               className={`flex items-center text-sm space-x-1.5 ${
-                hasDisagreed ? 'text-red-500 fill-red-500' : 'text-muted-foreground hover:text-red-500'
+                isDisagreed
+                  ? "text-red-500 fill-red-500"
+                  : "text-muted-foreground hover:text-red-500"
               }`}
             >
-              <ThumbsDown className={`w-[18px] h-[18px] ${hasDisagreed ? 'fill-red-500' : ''}`} />
-              <span>{disagrees}</span>
+              <ThumbsDown
+                className={`w-[18px] h-[18px] ${
+                  isDisagreed ? "fill-red-500" : ""
+                }`}
+              />
+              <span>{disAgreeCount}</span>
             </button>
           </div>
         </div>
-        
+
         <div className="flex items-center space-x-1">
           {/* Optional collaboration button for projects */}
           {isProject && onCollaborateToggle && (
             <button
               onClick={handleCollaborate}
               className={`text-sm px-2 py-1 mr-2 rounded-md ${
-                isCollaborating 
-                  ? 'bg-primary/20 text-primary' 
-                  : 'bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground'
+                isCollaborating
+                  ? "bg-primary/20 text-primary"
+                  : "bg-secondary/50 hover:bg-secondary text-muted-foreground hover:text-foreground"
               }`}
             >
-              {isCollaborating ? 'Collaborating' : 'Collaborate'}
+              {isCollaborating ? "Collaborating" : "Collaborate"}
             </button>
           )}
-          
+
           <button
             onClick={handleAmplify}
             className={`flex items-center text-sm space-x-1.5 ${
-              userHasAmplified ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+              userHasAmplified
+                ? "text-primary"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <Share2 className="w-[18px] h-[18px]" />
-            <span>{displayAmplifyCount > 0 ? displayAmplifyCount : ''}</span>
+            <span>{displayAmplifyCount > 0 ? displayAmplifyCount : ""}</span>
           </button>
-          
+
           <button
             onClick={handleReport}
             className="p-1.5 text-muted-foreground hover:text-foreground"
@@ -172,7 +243,7 @@ const PostEngagement: React.FC<PostEngagementProps> = ({
           </button>
         </div>
       </div>
-      
+
       {/* Amplify dialog */}
       <Dialog open={isAmplifyDialogOpen} onOpenChange={setIsAmplifyDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
@@ -192,9 +263,7 @@ const PostEngagement: React.FC<PostEngagementProps> = ({
             <Button variant="outline" onClick={handleSimpleAmplify}>
               Just Amplify
             </Button>
-            <Button onClick={handleAmplify}>
-              Amplify with Comment
-            </Button>
+            <Button onClick={handleAmplify}>Amplify with Comment</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -7,8 +7,8 @@
     "bio": "UI/UX Designer | Creating minimal interfaces that solve complex problems",
     "following": 245,
     "followers": 1289,
-    "email":"ayman@gmail.com",
-    "password":"ayman123"
+    "email": "ayman@gmail.com",
+    "password": "ayman123"
   },
   {
     "id": "u2",
@@ -58,5 +58,14 @@
     "following": 178,
     "followers": 2431,
     "isFollowing": true
+  },
+  {
+    "id": "NaN",
+    "email": "saad@aboulhoda.me",
+    "username": "Aboulhoda42",
+    "password": "saad@aboulhoda.me",
+    "avatar": "https://i.pravatar.cc/150?img=32",
+    "following": 0,
+    "followers": 0
   }
 ]

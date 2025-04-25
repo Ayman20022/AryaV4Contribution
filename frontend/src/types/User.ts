@@ -19,5 +19,4 @@ export interface MyUser{
     birthDate:string;
     balance:number;
     createdAt:string
-
 }

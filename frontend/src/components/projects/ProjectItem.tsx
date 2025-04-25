@@ -2,9 +2,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronUp, FileText, Code, Image as ImageIcon, Video as VideoIcon, FileUp } from 'lucide-react';
-import { Post, findUserById, formatRelativeTime, Contribution } from '../../data/dummyData';
+import { findUserById, formatRelativeTime, Contribution } from '../../data/dummyData';
 import FeedItem from '../feed/FeedItem';
 import { toast } from 'sonner';
+import { Post } from '@/types/responses/data/post/Post';
 
 interface ProjectItemProps {
   project: Post;
@@ -12,9 +13,9 @@ interface ProjectItemProps {
 
 const ProjectItem: React.FC<ProjectItemProps> = ({ project }) => {
   // If there are no contributions, render as a normal FeedItem
-  if (!project.contributions || project.contributions.length === 0) {
+  /*if (!project.contributions || project.contributions.length === 0) {
     return <FeedItem post={project} />;
-  }
+  }*/
   
   const [contributionsExpanded, setContributionsExpanded] = useState(false);
   const [showContributeForm, setShowContributeForm] = useState(false);
@@ -59,7 +60,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({ project }) => {
               <span className="mr-1">✦</span> Contributions
             </span>
             <span className="text-sm text-muted-foreground">
-              {project.contributions.length} {project.contributions.length === 1 ? 'contribution' : 'contributions'}
+              {0} {'contribution'}
             </span>
           </div>
           {contributionsExpanded ? 
@@ -70,7 +71,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({ project }) => {
         
         {contributionsExpanded && (
           <div className="mt-4 space-y-4">
-            {project.contributions.map((contribution) => {
+            {/*project.contributions.map((contribution) => {
               const user = findUserById(contribution.userId);
               
               let contentPreview;
@@ -160,7 +161,7 @@ const ProjectItem: React.FC<ProjectItemProps> = ({ project }) => {
                   </div>
                 </div>
               );
-            })}
+            })*/}
             
             {!showContributeForm ? (
               <button 

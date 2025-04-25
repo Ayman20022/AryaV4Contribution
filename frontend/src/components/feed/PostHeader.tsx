@@ -6,7 +6,8 @@ import { MoreHorizontal, ArrowBigUp, Sparkles } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { formatRelativeTime, User } from '@/data/dummyData';
+import { formatRelativeTime } from '@/data/dummyData';
+import { UserEssentials } from '@/types/responses/data/user/UserEssentials';
 
 interface PostHeaderProps {
   userId?: string;
@@ -17,7 +18,7 @@ interface PostHeaderProps {
   isProject?: boolean;
   isAggregator?: boolean;
   aggregatorSource?: string;
-  user?: User; // Added user property
+  user?: UserEssentials; // Added user property
 }
 
 const PostHeader: React.FC<PostHeaderProps> = ({
@@ -33,8 +34,8 @@ const PostHeader: React.FC<PostHeaderProps> = ({
 }) => {
   // If user object is provided, use its properties instead of individual props
   const actualUserId = user?.id || userId;
-  const actualUserName = user?.name || userName;
-  const actualUserAvatar = user?.avatar || userAvatar;
+  const actualUserName = user.firstName + " " + user.lastName || userName;
+  const actualUserAvatar = userAvatar;
 
   return (
     <div className="flex items-start gap-3">
