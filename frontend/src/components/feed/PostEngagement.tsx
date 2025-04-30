@@ -18,12 +18,12 @@ import { Textarea } from "../ui/textarea";
 import { toast } from "sonner";
 import { currentUser } from "../../data/dummyData";
 import { PostService } from "@/services/PostService";
+import { ReactionService } from "@/services/reactionService";
 
 interface PostEngagementProps {
   postId?: string;
   agrees: number;
   disagrees: number;
-  comments: number;
   amplifiedBy: string[];
   amplifiedCount?: number;
   commentsCount?: number;
@@ -43,7 +43,6 @@ const PostEngagement: React.FC<PostEngagementProps> = ({
   postId,
   agrees = 0,
   disagrees = 0,
-  comments = 0,
   amplifiedBy = [], // Default empty array
   amplifiedCount,
   commentsCount,
@@ -64,6 +63,7 @@ const PostEngagement: React.FC<PostEngagementProps> = ({
   const [disAgreeCount, setDisAgreeCount] = useState(disagrees);
   const [isAgreed, setIsAgreed] = useState(hasAgreed);
   const [isDisagreed, setIsDisagreed] = useState(hasDisagreed);
+  const [totalCommands, setCotalCommands] = useState(commentsCount);
 
   const handleAmplify = () => {
     if (onAmplify) {
@@ -101,11 +101,6 @@ const PostEngagement: React.FC<PostEngagementProps> = ({
     }
   };
 
-  // Use the provided counts or fallback to the original values
-  // Ensure we handle undefined values
-  const displayCommentCount =
-    commentsCount !== undefined ? commentsCount : comments;
-
   // Safely get the amplify count without relying on .length of potentially undefined values
   const displayAmplifyCount =
     amplifiedCount !== undefined
@@ -125,16 +120,16 @@ const PostEngagement: React.FC<PostEngagementProps> = ({
 
   const onAgree = async () => {
     if (isDisagreed) {
-      await PostService.cancelDisagree(postId);
+      await ReactionService.cancelDisagree(postId);
       setIsDisagreed(false);
       setDisAgreeCount(disAgreeCount - 1);
     }
     if (isAgreed) {
-      await PostService.cancelAgree(postId);
+      await ReactionService.cancelAgree(postId);
       setIsAgreed(false);
       setAgreeCount(agreeCount - 1);
     } else {
-      PostService.agree(postId);
+      ReactionService.createAgree(postId, "post");
       setIsAgreed(true);
       setAgreeCount(agreeCount + 1);
     }
@@ -142,16 +137,16 @@ const PostEngagement: React.FC<PostEngagementProps> = ({
 
   const onDisagree = async () => {
     if (isAgreed) {
-      await PostService.cancelAgree(postId);
+      await ReactionService.cancelAgree(postId);
       setIsAgreed(false);
       setAgreeCount(agreeCount - 1);
     }
     if (isDisagreed) {
-      await PostService.cancelDisagree(postId);
+      await ReactionService.cancelDisagree(postId);
       setIsDisagreed(false);
       setDisAgreeCount(disAgreeCount - 1);
     } else {
-      await PostService.disagree(postId);
+      await ReactionService.createDisagree(postId, "comment");
       setIsDisagreed(true);
       setDisAgreeCount(disAgreeCount + 1);
     }
@@ -170,7 +165,7 @@ const PostEngagement: React.FC<PostEngagementProps> = ({
             }`}
           >
             <MessageSquare className="w-[18px] h-[18px]" />
-            <span>{displayCommentCount}</span>
+            <span>{totalCommands}</span>
           </button>
 
           <div className="flex items-center space-x-2">
@@ -209,7 +204,6 @@ const PostEngagement: React.FC<PostEngagementProps> = ({
         </div>
 
         <div className="flex items-center space-x-1">
-          {/* Optional collaboration button for projects */}
           {isProject && onCollaborateToggle && (
             <button
               onClick={handleCollaborate}

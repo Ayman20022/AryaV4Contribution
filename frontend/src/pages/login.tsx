@@ -51,8 +51,8 @@ const Login: React.FC = () => {
           setEmailError(data.email);
           setPasswordError(data.password);
         } else if (status === 422) {
-          setPasswordError(data.message);
-          setEmailError("");
+          setEmail(data.message);
+          setPassword("");
         } else {
           toast.error("An unexpected error occurred. Please try again.");
         }

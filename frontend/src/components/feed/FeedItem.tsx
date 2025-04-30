@@ -4,11 +4,13 @@ import PostContent from "./PostContent";
 import ProjectMeta from "./ProjectMeta";
 import PostEngagement from "./PostEngagement";
 import CommentsSection from "./CommentsSection";
-import { findUserById, Comment } from "../../data/dummyData";
 import CommentForm from "../comments/CommentForm";
 import { currentUser } from "../../data/dummyData";
 import { Post } from "@/types/responses/data/post/Post";
-import { PostService } from "@/services/PostService";
+import { Comment } from "@/types/responses/data/comment/Comment";
+import { CommentService } from "@/services/commentService";
+import { set } from "date-fns";
+import { findCommentAndPerformAction } from "@/lib/utils";
 
 interface FeedItemProps {
   post: Post;
@@ -27,74 +29,51 @@ const FeedItem: React.FC<FeedItemProps> = ({ post, onPostUpdated }) => {
     setExpanded(!expanded);
   };
 
-  const handleCommentToggle = () => {
+  const handleCommentToggle = async () => {
+    if (postComments.length == 0) {
+      const { data } = await CommentService.findByPostId(post.id);
+      setPostComments(data.content);
+    }
     setIsCommenting(!isCommenting);
   };
 
-  const handleCommentSubmit = (commentText: string) => {
-    const newComment: Comment = {
-      id: `c${Date.now()}`,
-      userId: currentUser.id,
-      text: commentText,
-      createdAt: new Date(),
-      agrees: 0,
-      user: currentUser,
-    };
-
-    setPostComments([newComment, ...postComments]);
-    //post.comments = [newComment, ...postComments];
-    setIsCommenting(false);
+  const handleCommentSubmit = (comment: Comment) => {
+    setPostComments([comment, ...postComments]);
 
     if (onPostUpdated) {
       onPostUpdated();
     }
   };
 
-  const handleReplySubmit = (text: string, parentId: string) => {
-    const newReply: Comment = {
-      id: `c${Date.now()}-${parentId}`,
-      userId: currentUser.id,
-      text: text,
-      createdAt: new Date(),
-      agrees: 0,
-      user: currentUser,
-      parentId: parentId,
-    };
+  const handleReplySubmit = (reply: Comment) => {
+    console.log(reply);
 
-    const updatedComments = [...postComments];
-
-    const addReplyToComment = (
-      comments: Comment[],
-      parentId: string,
-      newReply: Comment
-    ) => {
-      for (let i = 0; i < comments.length; i++) {
-        if (comments[i].id === parentId) {
-          if (!comments[i].replies) {
-            comments[i].replies = [];
-          }
-          comments[i].replies = [newReply, ...comments[i].replies];
-          return true;
-        }
-
-        if (comments[i].replies && comments[i].replies.length > 0) {
-          const found = addReplyToComment(
-            comments[i].replies,
-            parentId,
-            newReply
-          );
-          if (found) return true;
-        }
-      }
-      return false;
-    };
-
-    addReplyToComment(updatedComments, parentId, newReply);
-    setPostComments(updatedComments);
-    //post.comments = updatedComments;
+    const parentId = reply.parent;
+    const replies = [reply];
+    const updatedComments = findCommentAndPerformAction(
+      postComments,
+      parentId,
+      replies
+    );
+    if (updatedComments != null) {
+      setPostComments(updatedComments);
+    }
 
     if (onPostUpdated) {
       onPostUpdated();
+    }
+  };
+
+  const handleLoadedReplies = (replies: Comment[]) => {
+    const parentId = replies[0].parent;
+
+    const updatedComments = findCommentAndPerformAction(
+      postComments,
+      parentId,
+      replies
+    );
+    if (updatedComments != null) {
+      setPostComments(updatedComments);
     }
   };
 
@@ -133,10 +112,9 @@ const FeedItem: React.FC<FeedItemProps> = ({ post, onPostUpdated }) => {
         postId={post.id}
         agrees={post.agreeCount || 0}
         disagrees={post.disagreeCount || 0}
-        comments={postComments.length}
         amplifiedBy={[]}
         amplifiedCount={0}
-        commentsCount={postComments.length}
+        commentsCount={post.commentsCount}
         isProject={post.type == "PROJECT"}
         onCommentClick={handleCommentToggle}
         collaborators={collaborators || []}
@@ -156,6 +134,7 @@ const FeedItem: React.FC<FeedItemProps> = ({ post, onPostUpdated }) => {
         comments={postComments}
         postId={post.id}
         onReplySubmit={handleReplySubmit}
+        onLoadedReplies={handleLoadedReplies}
       />
     </div>
   );

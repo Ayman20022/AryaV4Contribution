@@ -20,7 +20,11 @@ const Index = () => {
     return true;
   };
 
-  const { data: page, isLoading: isFeedLoading } = useQuery({
+  const {
+    data: page,
+    isLoading: isFeedLoading,
+    isError,
+  } = useQuery({
     queryKey: ["feed"],
     queryFn: async () => {
       const response = await PostService.findAll();
@@ -53,6 +57,13 @@ const Index = () => {
     );
   }
 
+  if (page == null) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <p className="text-muted-foreground">Server is down</p>
+      </div>
+    );
+  }
   return (
     <div>
       <div className="feed-container">
